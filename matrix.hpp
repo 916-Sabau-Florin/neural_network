@@ -1,3 +1,4 @@
+#include <initializer_list>
 
 template<class T>
 class matrix
@@ -17,12 +18,45 @@ public:
                 elem[i][j]=T();
     }
 
+    ~matrix()
+    {
+        for(size_t i=0;i<=rows;i++)
+            delete [] elem[i];
+        delete [] elem;
+    }
+
     size_t nrRows() const { return rows; }
     size_t nrCols() const { return cols; }
 
     T* operator[](const int &index)
     {
         return elem[index];
+    }
+
+    void operator=(std::initializer_list< std::initializer_list<T> > ll)
+    {
+        size_t r=1,c=1;
+        if(ll.size()!=rows)
+        {
+            std::cerr<<"INVALID INIT LIST\n";
+            exit(EXIT_FAILURE);
+        }
+
+        for(auto l:ll)
+        {
+            if(l.size()!=cols)
+            {
+                std::cerr<<"INVALID INIT LIST\n";
+                exit(EXIT_FAILURE);
+            }
+            for(auto x:l)
+            {
+                elem[r][c]=x;
+                c++;
+            }
+            c=1;
+            r++;
+        }
     }
 
     matrix<T>& transpose()
@@ -59,7 +93,7 @@ matrix<T> operator*(matrix<T> &left, matrix<T> &right)
     if(left.nrCols()!=right.nrRows())
     {
         std::cerr<<"INVALID MULTIPLICATION\n";
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     int kMax=left.nrCols();
@@ -78,7 +112,7 @@ matrix<T> operator+(matrix<T> &left, matrix<T> &right)
     if(left.nrRows()!=right.nrRows()||left.nrCols()!=right.nrCols())
     {
         std::cerr<<"INVALID ADDITION\n";
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     matrix<T> sum(left.nrRows(),left.nrCols());
@@ -94,7 +128,7 @@ matrix<T> hadamard(matrix<T> &left, matrix<T> &right)
     if(left.nrRows()!=right.nrRows()||left.nrCols()!=right.nrCols())
     {
         std::cerr<<"INVALID HADAMARD\n";
-        return matrix<T>(0,0);
+        exit(EXIT_FAILURE);
     }
 
     matrix<T> prod(left.nrRows(),left.nrCols());
@@ -103,3 +137,4 @@ matrix<T> hadamard(matrix<T> &left, matrix<T> &right)
             prod[i][j]=left[i][j]*right[i][j];
     return prod;
 }
+
