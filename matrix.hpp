@@ -1,4 +1,5 @@
 #include <initializer_list>
+#include <vector>
 
 template<class T>
 class matrix
@@ -13,12 +14,10 @@ public:
         for(size_t i=0;i<=rows;i++)
             elem[i]= new T[cols+1];
 
-
         for(int i=1;i<=rows;i++)
             for(int j=1;j<=cols;j++)
                 elem[i][j]=m.at(i,j);
     }
-
 
     matrix(size_t n,size_t m)
     {
@@ -74,7 +73,7 @@ public:
             r++;
         }
     }
-    void operator=(matrix<T> m)
+    void operator=(const matrix<T> &m)
     {
         for(size_t i=0;i<=rows;i++)
             delete [] elem[i];
@@ -84,6 +83,19 @@ public:
         for(int i=1;i<=rows;i++)
             for(int j=1;j<=cols;j++)
                 elem[i][j]=m[i][j];
+    }
+
+    void operator=(const std::vector<T> &v)
+    {
+        if(cols*rows!=v.size())
+        {
+            std::cerr<<"INVALID EQUAL VECTOR\n";
+            exit(EXIT_FAILURE);
+        }
+
+        for(int i=1;i<=rows;i++)
+            for(int j=1;j<=cols;j++)
+                elem[i][j]=v[(i-1)*rows+(j-1)];
     }
 
     matrix<T> transpose()
@@ -102,12 +114,12 @@ private:
 };
 
 template <class T>
-std::ostream& operator<<(std::ostream &os , matrix<T> m)
+std::ostream& operator<<(std::ostream &os ,const matrix<T> &m)
 {
     for(int i=1;i<=m.nrRows();i++)
     {
         for(int j=1;j<=m.nrCols();j++)
-            os<<m[i][j]<<' ';
+            os<<m.at(i,j)<<' ';
         os<<std::endl;
     }
     return os;
@@ -115,7 +127,7 @@ std::ostream& operator<<(std::ostream &os , matrix<T> m)
 
 
 template <class T>
-matrix<T> operator*(matrix<T> left,matrix<T> right)
+matrix<T> operator*(const matrix<T> &left,const matrix<T> &right)
 {
     if(left.nrCols()!=right.nrRows())
     {
@@ -129,12 +141,12 @@ matrix<T> operator*(matrix<T> left,matrix<T> right)
     for(size_t i=1;i<=prod.nrRows();i++)
         for(size_t j=1;j<=prod.nrCols();j++)
             for(size_t k=1;k<=kMax;k++)
-                prod[i][j]+=left[i][k]*right[k][j];
+                prod[i][j]+=left.at(i,k)*right.at(k,j);
     return prod;
 }
 
 template <class T>
-matrix<T> operator+(matrix<T> left,matrix<T> right)
+matrix<T> operator+(const matrix<T> &left ,const matrix<T> &right)
 {
     if(left.nrRows()!=right.nrRows()||left.nrCols()!=right.nrCols())
     {
@@ -145,12 +157,12 @@ matrix<T> operator+(matrix<T> left,matrix<T> right)
     matrix<T> sum(left.nrRows(),left.nrCols());
     for(size_t i=1;i<=sum.nrRows();i++)
         for(size_t j=1;j<=sum.nrCols();j++)
-            sum[i][j]=left[i][j]+right[i][j];
+            sum[i][j]=left.at(i,j)+right.at(i,j);
     return sum;
 }
 
 template <class T>
-matrix<T> hadamard(matrix<T> left,matrix<T> right)
+matrix<T> hadamard(const matrix<T> &left,const matrix<T> &right)
 {
     if(left.nrRows()!=right.nrRows()||left.nrCols()!=right.nrCols())
     {
@@ -161,7 +173,7 @@ matrix<T> hadamard(matrix<T> left,matrix<T> right)
     matrix<T> prod(left.nrRows(),left.nrCols());
     for(size_t i=1;i<=prod.nrRows();i++)
         for(size_t j=1;j<=prod.nrCols();j++)
-            prod[i][j]=left[i][j]*right[i][j];
+            prod[i][j]=left.at(i,j)*right.at(i,j);
     return prod;
 }
 
