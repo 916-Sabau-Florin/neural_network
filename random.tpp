@@ -1,3 +1,4 @@
+#pragma once
 #include <random>
 #include <chrono>
 #include <vector>
@@ -52,7 +53,7 @@ public:
 
 private:
     std::default_random_engine generator;
-}rng;
+};
 
 
 
