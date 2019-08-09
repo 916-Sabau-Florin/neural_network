@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+cpp-matrix.cbp
+cpp-matrix.depend
+cpp-matrix.layout
+main.cpp
