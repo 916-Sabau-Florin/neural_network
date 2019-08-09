@@ -71,11 +71,13 @@ public:
                 elem[i][j]=v[i*rows+j];
     }
 
-    void apply(std::function<T(T)> fn)
+    matrix<T> apply(std::function<T(T)> fn)
     {
+        matrix<T> m(rows,cols);
         for(int i=0;i<rows;i++)
             for(int j=0;j<cols;j++)
-                elem[i][j]=fn(elem[i][j]);
+                m[i][j]=fn(elem[i][j]);
+        return m;
     }
 
     matrix<T> transpose()
