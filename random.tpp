@@ -6,7 +6,6 @@
 class randomWrapper
 {
 public:
-
     randomWrapper()
     {
         unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();

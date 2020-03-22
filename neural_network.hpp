@@ -1,18 +1,35 @@
 #pragma once
-#include <functional>
-#include "random.tpp"
+#include <vector>
+#include <cmath>
+#include <fstream>
+#include <iomanip>
 #include "matrix.tpp"
+#include "random.tpp"
+#include "utils.hpp"
 
 class neural_network
 {
 public:
-    neural_network(const std::vector<int> &l, std::function<double(double)> activ);
+    neural_network(const std::vector<int> &l, std::vector<fn> activ , cost_fn cost);
+
+// TO DO:
+//  void addLayer(int l, fn activ);
+//  void setCost(fn c);
 
     void randomize(double m,double M);
 
-    void evaluate(const std::vector<double> &input);
+    void feedforward(const std::vector<double> &input);
 
     matrix<double> getOutput();
+
+    void backpropagate(std::vector<matrix<double>> &input,const std::vector<matrix<double>> &expected, double learnRate);
+
+    void gradientDescent(const std::vector<std::pair<matrix<double>,matrix<double> > > &data, int epochs, int batchSize);
+
+    void toFile(std::ofstream &file);
+
+    void fromFile(std::ifstream &file);
+
 private:
     int nrLayers;
     std::vector<int> layers;
@@ -20,14 +37,12 @@ private:
     std::vector<matrix<double>> weights;
     std::vector<matrix<double>> biases;
 
-    randomWrapper rng;
+    randomWrapper RNG;
 
-    std::function<double(double)> activation;
-//    std::function<double(const matrix<double>&,const matrix<double>&)> cost;
+    std::vector<fn> activation;
+    cost_fn cost;
 };
 
-double sigmoid(double x);
-double quadratic(const matrix<double> &output, const matrix<double> &expected);
 
 
 
