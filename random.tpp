@@ -3,11 +3,10 @@
 #include <chrono>
 #include <vector>
 
-namespace nn {
-
 class randomWrapper
 {
 public:
+
     randomWrapper()
     {
         unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -56,5 +55,5 @@ private:
     std::default_random_engine generator;
 };
 
-}
+
 
